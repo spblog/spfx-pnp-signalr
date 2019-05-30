@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://mastaq.sharepoint.com/sites/drone-1/SitePages/Test.aspx",
+      "customActions": {
+        "260b5bdc-c542-4f9f-868e-bb9d2cd4bc45": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    },
+    "pnPNotifierHeader": {
+      "pageUrl": "https://mastaq.sharepoint.com/sites/drone-1/SitePages/Test.aspx",
+      "customActions": {
+        "260b5bdc-c542-4f9f-868e-bb9d2cd4bc45": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    }
+  }
+}

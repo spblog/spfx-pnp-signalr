@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <ClientSideComponentInstance
+        Title="PnPNotifierHeader"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ComponentId="260b5bdc-c542-4f9f-868e-bb9d2cd4bc45"
+        Properties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </ClientSideComponentInstance>
+</Elements>

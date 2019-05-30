@@ -1,0 +1,7 @@
+bin/
+debug/
+obj/
+packages/
+.vs/
+PublishProfiles/
+node_modules/
