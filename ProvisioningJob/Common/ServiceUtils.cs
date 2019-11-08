@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Common
 {
-    public class SignalrUtils
+    public class ServiceUtils
     {
         private static readonly JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -16,7 +16,7 @@ namespace Common
 
         public string AccessKey { get; }
 
-        public SignalrUtils(string connectionString)
+        public ServiceUtils(string connectionString)
         {
             var result = ParseConnectionString(connectionString);
             Endpoint = result.Item1;
@@ -43,7 +43,7 @@ namespace Common
             var token = JwtTokenHandler.CreateJwtSecurityToken(
                 issuer: null,
                 audience: audience,
-                subject: claims == null ? null : new ClaimsIdentity(claims),
+                subject: new ClaimsIdentity(claims),
                 expires: expire,
                 signingCredentials: credentials);
             return JwtTokenHandler.WriteToken(token);

@@ -28,7 +28,7 @@ namespace SignalRHub
             services.AddSignalR();
 
             Settings.StorageConnection = Configuration[Consts.AzureDashboardKey];
-            var serviceUtils = new SignalrUtils(Configuration[Consts.SignalrConnectionKey]);
+            var serviceUtils = new ServiceUtils(Configuration[Consts.SignalrConnectionKey]);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(serviceUtils.AccessKey));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

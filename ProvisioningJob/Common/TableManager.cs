@@ -20,7 +20,7 @@ namespace Common
             var tableClient = storageAccount.CreateCloudTableClient();
 
             _table = tableClient.GetTableReference(cloudTableName);
-            
+
             Task.Run(async () => await _table.CreateIfNotExistsAsync());
         }
 
@@ -31,11 +31,17 @@ namespace Common
             Task.Run(async () => await _table.ExecuteAsync(insertOrMergeOperation));
         }
 
+        public void DeleteEntity(string rowKey)
+        {
+            var delete = TableOperation.Delete(new TableEntity(Consts.PartitionKey, rowKey) { ETag = "*" });
+            Task.Run(async () => await _table.ExecuteAsync(delete));
+        }
+
         public T GetByKey<T>(string rowKey) where T : TableEntity, new()
         {
             var retrieve = TableOperation.Retrieve<T>(Consts.PartitionKey, rowKey);
 
-            var result =  Task.Run(async () => await _table.ExecuteAsync(retrieve)).Result;
+            var result = Task.Run(async () => await _table.ExecuteAsync(retrieve)).Result;
 
             return (T)result.Result;
         }
