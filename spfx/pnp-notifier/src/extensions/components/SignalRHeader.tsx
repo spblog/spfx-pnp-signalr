@@ -35,7 +35,6 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       .withUrl(signalRHubUrl)
       .build();
 
-      /*
     connection.on("initial-state", data => {
       console.log(data);
 
@@ -53,7 +52,7 @@ export class SignalRHeader extends React.Component<IProps, IState> {
         });
       }
     });
-*/
+
     connection.on("notify", data => {
       console.log(data);
       let width = data.progress / data.total * 100;

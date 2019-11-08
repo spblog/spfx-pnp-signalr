@@ -9,17 +9,17 @@ namespace Common
     {
         private readonly CloudTable _table;
 
-        public TableManager(string _cloudTableName, string connectionString)
+        public TableManager(string cloudTableName, string connectionString)
         {
-            if (string.IsNullOrEmpty(_cloudTableName))
+            if (string.IsNullOrEmpty(cloudTableName))
             {
-                throw new ArgumentNullException("Table", "Table Name can't be empty");
+                throw new ArgumentNullException(nameof(cloudTableName), "Table Name can't be empty");
             }
 
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
 
-            _table = tableClient.GetTableReference(_cloudTableName);
+            _table = tableClient.GetTableReference(cloudTableName);
             
             Task.Run(async () => await _table.CreateIfNotExistsAsync());
         }

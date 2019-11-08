@@ -1,12 +1,13 @@
 ﻿
 using System;
 using System.Configuration;
+using Common;
 
 namespace ProvisioningJob.Common
 {
     public class ConfigReader
     {
-        private bool _isDevelopment = false;
+        private readonly bool _isDevelopment;
 
         public ConfigReader(bool isDevelopment)
         {
@@ -45,10 +46,10 @@ namespace ProvisioningJob.Common
             {
                 if (_isDevelopment)
                 {
-                    return Environment.GetEnvironmentVariable("Azure:SignalR:ConnectionString", EnvironmentVariableTarget.User);
+                    return Environment.GetEnvironmentVariable(Consts.SignalrConnectionKey, EnvironmentVariableTarget.User);
                 }
 
-                return ConfigurationManager.AppSettings["Azure:SignalR:ConnectionString"];
+                return ConfigurationManager.AppSettings[Consts.SignalrConnectionKey];
 
             }
         }

@@ -24,6 +24,12 @@ namespace SignalRHub.Hubs
             return Clients.All.SendAsync("notify", data);
         }
 
+        [Authorize]
+        public Task Completed()
+        {
+            return Clients.All.SendAsync("completed");
+        }
+
         public void InitialState(string webUrl)
         {
             try

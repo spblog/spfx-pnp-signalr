@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Common
 {
-    public class ServiceUtils
+    public class SignalrUtils
     {
         private static readonly JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -15,25 +16,21 @@ namespace Common
 
         public string AccessKey { get; }
 
-        public ServiceUtils(string connectionString)
+        public SignalrUtils(string connectionString)
         {
             var result = ParseConnectionString(connectionString);
             Endpoint = result.Item1;
             AccessKey = result.Item2;
         }
 
-        public string GenerateAccessToken(string audience, string userId, TimeSpan? lifetime = null)
+        public Task<string> GenerateAccessToken(TimeSpan? lifetime = null)
         {
-            IEnumerable<Claim> claims = null;
-            if (userId != null)
-            {
-                claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId)
-                };
-            }
+            var claims = new[]
+             {
+                new Claim(ClaimTypes.NameIdentifier, GenerateServerName())
+            };
 
-            return GenerateAccessTokenInternal(audience, claims, lifetime ?? TimeSpan.FromHours(1));
+            return Task.FromResult(GenerateAccessTokenInternal("SignalRClients", claims, lifetime ?? TimeSpan.FromHours(1)));
         }
 
         public string GenerateAccessTokenInternal(string audience, IEnumerable<Claim> claims, TimeSpan lifetime)
@@ -50,6 +47,11 @@ namespace Common
                 expires: expire,
                 signingCredentials: credentials);
             return JwtTokenHandler.WriteToken(token);
+        }
+
+        private string GenerateServerName()
+        {
+            return $"{Environment.MachineName}_{Guid.NewGuid():N}";
         }
 
         private static readonly char[] PropertySeparator = { ';' };

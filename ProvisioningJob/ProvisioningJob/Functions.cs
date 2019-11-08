@@ -26,7 +26,7 @@ namespace ProvisioningJob
         {
             var config = new JobHostConfiguration();
             _configReader = new ConfigReader(config.IsDevelopment);
-            _storageConnection = ConfigurationManager.ConnectionStrings["AzureWebJobsDashboard"].ConnectionString;
+            _storageConnection = ConfigurationManager.ConnectionStrings[Consts.AzureDashboardKey].ConnectionString;
             _tableManager = new TableManager(Consts.TableName, _storageConnection);
         }
 
@@ -71,7 +71,7 @@ namespace ProvisioningJob
         {
             var notifier = new SignalRNotifier(_configReader.SignalRConnection);
 
-            notifier.NewNotify(new ProvisioningState
+            notifier.NotifyProgress(new ProvisioningState
             {
                 Progress = 33,
                 Total = 55,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,8 +14,6 @@ namespace SignalRHub
 {
     public class Startup
     {
-        private readonly string Key = "2a596627-3c52-4851-b6f1-57301af61e3a";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,8 +27,9 @@ namespace SignalRHub
             services.AddCors();
             services.AddSignalR();
 
-            Settings.StorageConnection = Configuration["AzureWebJobsDashboard"];
-            var SecurityKey = new SymmetricSecurityKey(new Guid(Key).ToByteArray());
+            Settings.StorageConnection = Configuration[Consts.AzureDashboardKey];
+            var serviceUtils = new SignalrUtils(Configuration[Consts.SignalrConnectionKey]);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(serviceUtils.AccessKey));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -42,7 +42,7 @@ namespace SignalRHub
                             ValidateIssuer = false,
                             ValidateActor = false,
                             ValidateLifetime = true,
-                            IssuerSigningKey = SecurityKey
+                            IssuerSigningKey = securityKey
                         };
 
                     options.Events = new JwtBearerEvents
@@ -62,7 +62,6 @@ namespace SignalRHub
                         }
                     };
                 });
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

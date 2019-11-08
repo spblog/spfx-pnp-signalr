@@ -79,7 +79,7 @@
     <Compile Include="Model\ProvisioningState.cs" />
     <Compile Include="Model\Site.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceUtils.cs" />
+    <Compile Include="SignalrUtils.cs" />
     <Compile Include="TableManager.cs" />
   </ItemGroup>
   <ItemGroup>
