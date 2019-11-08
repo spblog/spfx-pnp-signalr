@@ -37,7 +37,6 @@ namespace ProvisioningJob
                 log.WriteLine(siteModel.WebUrl);
                 var rowKey = siteModel.WebUrl.Split('/').Last();
 
-
                 _tableManager.InsertEntity(new ProvisioningState
                 {
                     Progress = -1,
@@ -72,6 +71,16 @@ namespace ProvisioningJob
         {
             var notifier = new SignalRNotifier(_configReader.SignalRConnection);
 
+            notifier.NewNotify(new ProvisioningState
+            {
+                Progress = 33,
+                Total = 55,
+                Message = "wow it works!!!",
+                PartitionKey = Consts.PartitionKey,
+                Timestamp = DateTimeOffset.UtcNow,
+                RowKey = rowKey
+            });
+
             var applyingInformation = new ProvisioningTemplateApplyingInformation
             {
                 ProgressDelegate = (message, progress, total) =>
@@ -88,7 +97,7 @@ namespace ProvisioningJob
                     };
                     _tableManager.InsertEntity(state);
 
-                    notifier.NotifyClients(state);
+                    notifier.NotifyProgress(state);
                 }
             };
 
@@ -97,7 +106,9 @@ namespace ProvisioningJob
             var template = provider.GetTemplate("template.xml");
             template.Connector = new AzureStorageConnector(_storageConnection, "pnp-drone");
 
-            web.ApplyProvisioningTemplate(template, applyingInformation);
+            // web.ApplyProvisioningTemplate(template, applyingInformation);
+
+            notifier.NotifyCompleted();
         }
 
         private static void AddCustomAction(Web web)
@@ -118,14 +129,12 @@ namespace ProvisioningJob
         {
             if (web.CustomActionExists(Consts.CustomActionName))
             {
-                var customAction = web.GetCustomActions().SingleOrDefault(a => a.Name == Consts.CustomActionName);
+                var customAction = web.GetCustomActions().FirstOrDefault(a => a.Name == Consts.CustomActionName);
                 if (customAction != null)
                 {
                     customAction.DeleteObject();
                     web.Context.ExecuteQueryRetry();
                 }
-                
-
             }
         }
     }

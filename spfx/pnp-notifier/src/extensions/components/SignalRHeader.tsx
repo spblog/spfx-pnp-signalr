@@ -35,29 +35,40 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       .withUrl(signalRHubUrl)
       .build();
 
-    connection.on("initial-state", (message, progress, total) => {
-      if (total === -1) {
+      /*
+    connection.on("initial-state", data => {
+      console.log(data);
+
+      if (data.total === -1) {
         this.setState({
           width: 5,
           message: 'Starting...'
         });
       } else {
+        let width = data.progress / data.total * 100;
+        let percent = Math.floor(width);
         this.setState({
-          width: progress / total * 100,
-          message: `Processing: ${message}`
+          width,
+          message: `${percent}% Provisioning: ${data.message}`
         });
       }
-      console.log(message);
-      console.log(progress);
-      console.log(total);
     });
-
+*/
     connection.on("notify", data => {
       console.log(data);
-
+      let width = data.progress / data.total * 100;
+      let percent = Math.floor(width);
       this.setState({
-        width: data.Progress / data.Total * 100,
-        message: `Processing: ${data.Message}`
+        width,
+        message: `${percent}% Provisioning: ${data.message}`
+      });
+    });
+
+    connection.on("completed", () => {
+      console.log("completed");
+      this.setState({
+        width: 100,
+        message: `Your site is fully provisioned. Refresh the page to see the changes.`
       });
     });
 
