@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as signalR from "@aspnet/signalr";
 import './SignalRHeader.scss';
+import { ApplicationCustomizerContext } from '@microsoft/sp-application-base';
+
 
 export interface IProps {
   webUrl: string;
+  context: ApplicationCustomizerContext;
 }
 
 interface IState {
@@ -23,7 +26,6 @@ export class SignalRHeader extends React.Component<IProps, IState> {
   }
 
   public async componentDidMount(): Promise<void> {
-
     let signalRHubUrl;
     if (process.env.NODE_ENV === 'dev') {
       signalRHubUrl = 'https://localhost:44341/pnpprovisioninghub';
@@ -32,7 +34,9 @@ export class SignalRHeader extends React.Component<IProps, IState> {
     }
 
     let connection = new signalR.HubConnectionBuilder()
-      .withUrl(signalRHubUrl)
+      .withUrl(signalRHubUrl, {
+        accessTokenFactory: this.getAccessToken.bind(this)
+      })
       .build();
 
     connection.on("initial-state", data => {
@@ -73,6 +77,27 @@ export class SignalRHeader extends React.Component<IProps, IState> {
 
     await connection.start();
     await connection.invoke("InitialState", this.props.webUrl);
+  }
+
+  public async getAccessToken(): Promise<string> {
+    let tokenProvider = await this.props.context.aadTokenProviderFactory.getTokenProvider();
+    let token = await tokenProvider.getToken('d6ec7016-0266-4f43-bd62-a84dde94f78b');
+
+    console.log(token);
+
+    return token;
+    /*
+    console.log(token);
+
+    let data = await fetch("https://localhost:44341/api/values", {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      }
+    });
+    let result = await data.json();
+    console.log(result);
+    */
   }
 
   public render(): React.ReactElement {

@@ -31,7 +31,11 @@ namespace ProvisioningJob.Common
             var hubConnection = new HubConnectionBuilder()
                 .WithUrl(_serviceUtils.Endpoint + "/" + Consts.HubName, opts =>
                 {
-                    opts.AccessTokenProvider = async () => await _serviceUtils.GenerateAccessToken();
+                    opts.AccessTokenProvider = async () =>
+                    {
+                        var token = await _serviceUtils.GenerateAccessToken();
+                        return token;
+                    };
                 })
                 .Build();
 

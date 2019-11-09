@@ -46,7 +46,8 @@ export default class PnPNotifierHeaderApplicationCustomizer
 
       const element: React.ReactElement<IProps> = React.createElement(
         SignalRHeader, {
-          webUrl: this.context.pageContext.web.absoluteUrl
+          webUrl: this.context.pageContext.web.absoluteUrl,
+          context: this.context
         });
 
       ReactDom.render(element, this.topPlaceholder.domElement);

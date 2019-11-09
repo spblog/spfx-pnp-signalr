@@ -6,7 +6,13 @@
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
-    "isDomainIsolated": false
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "SPFx SignalR Hub",
+        "scope": "user_impersonation"
+      }
+    ]
   },
   "paths": {
     "zippedPackage": "solution/pn-p-notifier.sppkg"
