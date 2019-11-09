@@ -9,5 +9,6 @@
         public static string ClientComponentId = "260b5bdc-c542-4f9f-868e-bb9d2cd4bc45";
         public static string SignalrConnectionKey = "SignalR:ConnectionString";
         public static string AzureDashboardKey = "AzureWebJobsDashboard";
+        public static string SharePointOriginKey = "SharePointOrigin";
     }
 }

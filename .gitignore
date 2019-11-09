@@ -5,3 +5,4 @@ packages/
 .vs/
 PublishProfiles/
 node_modules/
+PS/siteScript.ps1

@@ -108,7 +108,7 @@ namespace SignalRHub
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("https://localhost:4321", "https://mastaq.sharepoint.com")
+                builder.WithOrigins("https://localhost:4321", Configuration[Consts.SharePointOriginKey])
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

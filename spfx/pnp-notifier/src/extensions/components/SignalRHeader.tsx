@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as signalR from "@aspnet/signalr";
 import './SignalRHeader.scss';
 import { ApplicationCustomizerContext } from '@microsoft/sp-application-base';
-
+import { clientId, localHubUrl, cloudHubUrl } from '../consts';
 
 export interface IProps {
   webUrl: string;
@@ -28,9 +28,9 @@ export class SignalRHeader extends React.Component<IProps, IState> {
   public async componentDidMount(): Promise<void> {
     let signalRHubUrl;
     if (process.env.NODE_ENV === 'dev') {
-      signalRHubUrl = 'https://localhost:44341/pnpprovisioninghub';
+      signalRHubUrl = localHubUrl;
     } else {
-      signalRHubUrl = 'https://spfx-signalr-demo.azurewebsites.net/pnpprovisioninghub';
+      signalRHubUrl = cloudHubUrl;
     }
 
     let connection = new signalR.HubConnectionBuilder()
@@ -81,7 +81,7 @@ export class SignalRHeader extends React.Component<IProps, IState> {
 
   public async getAccessToken(): Promise<string> {
     let tokenProvider = await this.props.context.aadTokenProviderFactory.getTokenProvider();
-    let token = await tokenProvider.getToken('d6ec7016-0266-4f43-bd62-a84dde94f78b');
+    let token = await tokenProvider.getToken(clientId);
 
     console.log(token);
 

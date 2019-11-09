@@ -4,7 +4,7 @@ $site_script = @'
     "actions": [
     {
             "verb": "triggerFlow",
-            "url": "https://prod-22.northeurope.logic.azure.com:443/workflows/baa8d49561d643bf8a637eb48a2dbb51/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2uYKaQdWZUbcqRz-ZlfjyWzNjK_p4-ddr6O2ZNpG-Xk",
+            "url": "<Logic App trigger url>",
             "name": "Apply PnP Template",
             "parameters": {
                 "event":"",
