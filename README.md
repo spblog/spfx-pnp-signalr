@@ -4,7 +4,7 @@
 
 ### 1. Prerequisites
 
-You should configure Azure Storage account prior running the sample. For local development use Azure Storage Emulator with below artifacts:
+You should configure Azure Storage account prior running the sample. For local development use Azure Storage Explorer with below artifacts:
 
 #### Blob containers
 
