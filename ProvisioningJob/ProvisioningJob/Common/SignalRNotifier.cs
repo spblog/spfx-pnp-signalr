@@ -10,29 +10,22 @@ namespace ProvisioningJob.Common
     public class SignalRNotifier
     {
         private readonly ConfigReader _configReader;
-        private readonly AzureAppInfo _appInfo;
 
         public SignalRNotifier(ConfigReader configReader)
         {
-            _appInfo = new AzureAppInfo
-            {
-                ClientId = configReader.AzureClientId,
-                ClientSecret = configReader.AzureClientSecret,
-                TenantId = configReader.AzureTenantId
-            };
             _configReader = configReader;
         }
 
-        public void NotifyProgress(ProvisioningState state)
+        public async Task NotifyProgress(ProvisioningState state)
         {
-            var hubConnection = Task.Run(async () => await CreateAndStartHubConnection()).Result;
-            Task.Run(async () => await hubConnection.SendAsync("Notify", state)).Wait();
+            var hubConnection = await CreateAndStartHubConnection();
+            await hubConnection.SendAsync("Notify", state);
         }
-        
-        public void NotifyCompleted()
+
+        public async Task NotifyCompleted()
         {
-            var hubConnection = Task.Run(async () => await CreateAndStartHubConnection()).Result;
-            Task.Run(async () => await hubConnection.SendAsync("Completed")).Wait();
+            var hubConnection = await CreateAndStartHubConnection();
+            await hubConnection.SendAsync("Completed");
         }
 
         private async Task<HubConnection> CreateAndStartHubConnection()
@@ -55,13 +48,13 @@ namespace ProvisioningJob.Common
 
         public async Task<string> GenerateAccessToken()
         {
-            var app = ConfidentialClientApplicationBuilder.Create(_appInfo.ClientId)
-                .WithClientSecret(_appInfo.ClientSecret)
-                .WithAuthority(new Uri("https://login.microsoftonline.com/" + _appInfo.TenantId))
+            var app = ConfidentialClientApplicationBuilder.Create(_configReader.AzureClientId)
+                .WithClientSecret(_configReader.AzureClientSecret)
+                .WithAuthority(new Uri("https://login.microsoftonline.com/" + _configReader.AzureTenantId))
                 .Build();
 
             // generate token for itself
-            var scopes = new [] { $"api://{_appInfo.ClientId}/.default" };
+            var scopes = new[] { $"api://{_configReader.AzureClientId}/.default" };
 
             var result = await app.AcquireTokenForClient(scopes).ExecuteAsync();
 

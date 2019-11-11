@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Common;
 using Common.Model;
 using Microsoft.Azure.WebJobs;
@@ -30,7 +31,7 @@ namespace ProvisioningJob
             _tableManager = new TableManager(Consts.TableName, _storageConnection);
         }
 
-        public static void ProcessQueueMessage([QueueTrigger("pnp-provision")] Site siteModel, TextWriter log)
+        public static async Task ProcessQueueMessage([QueueTrigger("pnp-provision")] Site siteModel, TextWriter log)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace ProvisioningJob
                 RemoveCustomAction(web);
                 AddCustomAction(web);
 
-                Provision(web, rowKey, log);
+                await Provision(web, rowKey, log);
 
                 RemoveCustomAction(web);
                 _tableManager.DeleteEntity(rowKey);
@@ -76,7 +77,7 @@ namespace ProvisioningJob
             }
         }
 
-        private static void Provision(Web web, string rowKey, TextWriter log)
+        private static async Task Provision(Web web, string rowKey, TextWriter log)
         {
             var notifier = new SignalRNotifier(_configReader);
 
@@ -96,7 +97,7 @@ namespace ProvisioningJob
                     };
                     _tableManager.InsertEntity(state);
 
-                    notifier.NotifyProgress(state);
+                   Task.Run(async () =>  await notifier.NotifyProgress(state)).Wait();
                 }
             };
 
@@ -107,7 +108,7 @@ namespace ProvisioningJob
 
             web.ApplyProvisioningTemplate(template, applyingInformation);
 
-            notifier.NotifyCompleted();
+            await notifier.NotifyCompleted();
         }
 
         private static void AddCustomAction(Web web)
