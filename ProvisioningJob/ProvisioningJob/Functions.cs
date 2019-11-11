@@ -78,7 +78,7 @@ namespace ProvisioningJob
 
         private static void Provision(Web web, string rowKey, TextWriter log)
         {
-            var notifier = new SignalRNotifier(_configReader.SignalRConnection);
+            var notifier = new SignalRNotifier(_configReader);
 
             var applyingInformation = new ProvisioningTemplateApplyingInformation
             {

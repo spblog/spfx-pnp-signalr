@@ -9,7 +9,7 @@ using NLog;
 
 namespace SignalRHub.Hubs
 {
-    [Authorize(AuthenticationSchemes = "AzureADJwtBearer, WebJobBearerAuth")]
+    [Authorize]
     public class PnPProvisioningHub : Hub
     {
         private readonly ILogger _logger;

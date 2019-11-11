@@ -6,7 +6,7 @@ namespace SignalRHub.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "AzureADJwtBearer, WebJobBearerAuth")]
+    [Authorize]
     public class ValuesController : ControllerBase
     {
         // GET api/values

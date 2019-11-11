@@ -40,16 +40,58 @@ namespace ProvisioningJob.Common
             }
         }
 
-        public string SignalRConnection
+        public string SignalrHostUrl
         {
             get
             {
                 if (_isDevelopment)
                 {
-                    return Environment.GetEnvironmentVariable(Consts.SignalrConnectionKey, EnvironmentVariableTarget.User);
+                    return Environment.GetEnvironmentVariable(Consts.SignalrHostUrlKey, EnvironmentVariableTarget.User);
                 }
 
-                return ConfigurationManager.AppSettings[Consts.SignalrConnectionKey];
+                return ConfigurationManager.AppSettings[Consts.SignalrHostUrlKey];
+
+            }
+        }
+
+        public string AzureClientId
+        {
+            get
+            {
+                if (_isDevelopment)
+                {
+                    return Environment.GetEnvironmentVariable(Consts.ClientIdKey, EnvironmentVariableTarget.User);
+                }
+
+                return ConfigurationManager.AppSettings[Consts.ClientIdKey];
+
+            }
+        }
+
+        public string AzureClientSecret
+        {
+            get
+            {
+                if (_isDevelopment)
+                {
+                    return Environment.GetEnvironmentVariable(Consts.ClientSecretKey, EnvironmentVariableTarget.User);
+                }
+
+                return ConfigurationManager.AppSettings[Consts.ClientSecretKey];
+
+            }
+        }
+
+        public string AzureTenantId
+        {
+            get
+            {
+                if (_isDevelopment)
+                {
+                    return Environment.GetEnvironmentVariable(Consts.TenantIdKey, EnvironmentVariableTarget.User);
+                }
+
+                return ConfigurationManager.AppSettings[Consts.TenantIdKey];
 
             }
         }

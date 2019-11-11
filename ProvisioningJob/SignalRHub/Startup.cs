@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -29,33 +27,10 @@ namespace SignalRHub
         {
             IdentityModelEventSource.ShowPII = true; 
             Settings.StorageConnection = Configuration[Consts.AzureDashboardKey];
-            var serviceUtils = new ServiceUtils(Configuration[Consts.SignalrConnectionKey]);
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(serviceUtils.AccessKey));
             var tenantId = Configuration["AzureAd:TenantId"];
 
-            services.AddAuthentication()
-                .AddAzureADBearer(options =>
-                {
-                    Configuration.Bind("AzureAd", options);
-                })
-                .AddJwtBearer("WebJobBearerAuth", options =>
-                {
-                    options.TokenValidationParameters =
-                        new TokenValidationParameters
-                        {
-                            LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
-                            ValidateAudience = false,
-                            ValidateIssuer = false,
-                            ValidateActor = false,
-                            ValidateLifetime = true,
-                            IssuerSigningKey = securityKey
-                        };
-
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = AttachAccessToken
-                    };
-                });
+            services.AddAuthentication(AzureADDefaults.JwtBearerAuthenticationScheme)
+                .AddAzureADBearer(options => { Configuration.Bind("AzureAd", options); });
 
             services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, options =>
             {
@@ -97,7 +72,6 @@ namespace SignalRHub
             {
                 context.Token = context.Request.Query["access_token"];
             }
-
 
             return Task.CompletedTask;
         }
