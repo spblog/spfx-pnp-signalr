@@ -52,8 +52,6 @@ namespace ProvisioningJob
                 context.Load(web);
                 context.ExecuteQueryRetry();
 
-                RemoveCustomAction(context.Site);
-
                 await Provision(web, rowKey, log);
 
                 RemoveCustomAction(context.Site);

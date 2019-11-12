@@ -14,32 +14,6 @@ namespace ProvisioningJob.Common
             _isDevelopment = isDevelopment;
         }
 
-        public string AppId
-        {
-            get
-            {
-                if (_isDevelopment)
-                {
-                    return Environment.GetEnvironmentVariable(nameof(AppId), EnvironmentVariableTarget.User);
-                }
-
-                return ConfigurationManager.AppSettings[nameof(AppId)];
-            }
-        }
-
-        public string AppSecret
-        {
-            get
-            {
-                if (_isDevelopment)
-                {
-                    return Environment.GetEnvironmentVariable(nameof(AppSecret), EnvironmentVariableTarget.User);
-                }
-
-                return ConfigurationManager.AppSettings[nameof(AppSecret)];
-            }
-        }
-
         public string SignalrHostUrl
         {
             get

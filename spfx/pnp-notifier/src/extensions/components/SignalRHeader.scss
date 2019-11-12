@@ -19,6 +19,13 @@ $bg-light-gray: #f5f5f5;
   box-shadow: inset 0px 2px 3px #bbb;
 }
 
+.regular {
+  background-color: $brand-primary;
+  span {
+    color: white;
+  }
+}
+
 .progress-bar {
   background-color: $brand-primary;
   box-shadow: none;

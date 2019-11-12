@@ -64,6 +64,12 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       console.log(data);
       let width = data.progress / data.total * 100;
       let percent = Math.floor(width);
+
+      if (width >= 100) {
+        width = 99;
+        percent = 99;
+      }
+
       this.setState({
         width,
         message: `${percent}% Provisioning: ${data.message}`
@@ -99,7 +105,7 @@ export class SignalRHeader extends React.Component<IProps, IState> {
     return (
       <div className="demo-preview">
         <div className="progress progress-striped active">
-          <div role="progressbar progress-striped" style={divStyle} className="progress-bar"><span>{this.state.message}</span></div>
+          <div role="progressbar progress-striped" style={divStyle} className={this.state.width === 100 ? "regular" : "progress-bar"}><span>{this.state.message}</span></div>
         </div>
       </div>
     );
