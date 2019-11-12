@@ -58,7 +58,6 @@ namespace SignalRHub
 
             });
 
-            services.AddCors();
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -67,8 +66,7 @@ namespace SignalRHub
         {
             var accessToken = context.Request.Query["access_token"];
 
-            if (!string.IsNullOrEmpty(accessToken) &&
-                (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
+            if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = context.Request.Query["access_token"];
             }
@@ -79,14 +77,6 @@ namespace SignalRHub
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
-
-            app.UseCors(builder =>
-            {
-                builder.WithOrigins("https://localhost:4321", Configuration[Consts.SharePointOriginKey])
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-            });
 
             app.UseHttpsRedirection();
 

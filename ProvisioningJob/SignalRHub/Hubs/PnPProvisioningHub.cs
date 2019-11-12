@@ -38,7 +38,14 @@ namespace SignalRHub.Hubs
                 var tableManager = new TableManager(Consts.TableName, Settings.StorageConnection);
                 var state = tableManager.GetByKey<ProvisioningState>(rowKey);
 
-                if (state == null) return;
+                if (state == null)
+                {
+                    Clients.Client(Context.ConnectionId).SendAsync("initial-state", new
+                    {
+                        Total = -1
+                    });
+                    return;
+                }
 
                 Clients.Client(Context.ConnectionId).SendAsync("initial-state", new
                 {

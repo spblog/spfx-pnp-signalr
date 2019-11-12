@@ -6,3 +6,4 @@ packages/
 PublishProfiles/
 node_modules/
 PS/siteScript.ps1
+cert.pfx

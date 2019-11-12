@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://mastaq.sharepoint.com/sites/drone-12/SitePages/Test.aspx",
+      "pageUrl": "https://mastaq.sharepoint.com/sites/drone1/SitePages/Test.aspx",
       "customActions": {
         "260b5bdc-c542-4f9f-868e-bb9d2cd4bc45": {
           "location": "ClientSideExtension.ApplicationCustomizer",
@@ -15,7 +15,7 @@
       }
     },
     "pnPNotifierHeader": {
-      "pageUrl": "https://mastaq.sharepoint.com/sites/drone-12/SitePages/Test.aspx",
+      "pageUrl": "https://mastaq.sharepoint.com/sites/drone1/SitePages/Test.aspx",
       "customActions": {
         "260b5bdc-c542-4f9f-868e-bb9d2cd4bc45": {
           "location": "ClientSideExtension.ApplicationCustomizer",

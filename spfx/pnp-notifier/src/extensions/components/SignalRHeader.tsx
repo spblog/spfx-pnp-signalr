@@ -3,6 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import './SignalRHeader.scss';
 import { ApplicationCustomizerContext } from '@microsoft/sp-application-base';
 import { clientId, localHubUrl, cloudHubUrl } from '../consts';
+import { HttpTransportType } from '@aspnet/signalr';
 
 export interface IProps {
   webUrl: string;
@@ -35,7 +36,9 @@ export class SignalRHeader extends React.Component<IProps, IState> {
 
     let connection = new signalR.HubConnectionBuilder()
       .withUrl(signalRHubUrl, {
-        accessTokenFactory: this.getAccessToken.bind(this)
+        accessTokenFactory: this.getAccessToken.bind(this),
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets
       })
       .build();
 
@@ -44,8 +47,8 @@ export class SignalRHeader extends React.Component<IProps, IState> {
 
       if (data.total === -1) {
         this.setState({
-          width: 5,
-          message: 'Starting...'
+          width: 100,
+          message: 'Preparing the engine... The provisioning will start in a few seconds...'
         });
       } else {
         let width = data.progress / data.total * 100;
@@ -86,18 +89,6 @@ export class SignalRHeader extends React.Component<IProps, IState> {
     console.log(token);
 
     return token;
-    /*
-    console.log(token);
-
-    let data = await fetch("https://localhost:44341/api/values", {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/json"
-      }
-    });
-    let result = await data.json();
-    console.log(result);
-    */
   }
 
   public render(): React.ReactElement {

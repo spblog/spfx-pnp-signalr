@@ -95,5 +95,19 @@ namespace ProvisioningJob.Common
 
             }
         }
+
+        public string CertificatePassword
+        {
+            get
+            {
+                if (_isDevelopment)
+                {
+                    return Environment.GetEnvironmentVariable(Consts.CertificatePasswordKey, EnvironmentVariableTarget.User);
+                }
+
+                return ConfigurationManager.AppSettings[Consts.CertificatePasswordKey];
+
+            }
+        }
     }
 }

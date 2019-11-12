@@ -8,7 +8,6 @@ using Common.Model;
 using Microsoft.Azure.WebJobs;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
-using OfficeDevPnP.Core.Entities;
 using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
@@ -46,28 +45,18 @@ namespace ProvisioningJob
                     return;
                 }
 
-                _tableManager.InsertEntity(new ProvisioningState
-                {
-                    Progress = -1,
-                    Total = -1,
-                    Message = "Initializing",
-                    PartitionKey = Consts.PartitionKey,
-                    Timestamp = DateTimeOffset.UtcNow,
-                    RowKey = rowKey
-                });
-
                 var authManager = new AuthenticationManager();
-                var context = authManager.GetAppOnlyAuthenticatedContext(siteModel.WebUrl, _configReader.AppId, _configReader.AppSecret);
+                var context = authManager.GetAzureADAppOnlyAuthenticatedContext(siteModel.WebUrl,
+                    _configReader.AzureClientId, _configReader.AzureTenantId, "cert.pfx", _configReader.CertificatePassword);
                 var web = context.Web;
                 context.Load(web);
                 context.ExecuteQueryRetry();
 
-                RemoveCustomAction(web);
-                AddCustomAction(web);
+                RemoveCustomAction(context.Site);
 
                 await Provision(web, rowKey, log);
 
-                RemoveCustomAction(web);
+                RemoveCustomAction(context.Site);
                 _tableManager.DeleteEntity(rowKey);
             }
             catch (Exception e)
@@ -97,7 +86,7 @@ namespace ProvisioningJob
                     };
                     _tableManager.InsertEntity(state);
 
-                   Task.Run(async () =>  await notifier.NotifyProgress(state)).Wait();
+                    Task.Run(async () => await notifier.NotifyProgress(state)).Wait();
                 }
             };
 
@@ -111,33 +100,16 @@ namespace ProvisioningJob
             await notifier.NotifyCompleted();
         }
 
-        private static void AddCustomAction(Web web)
+        private static void RemoveCustomAction(Microsoft.SharePoint.Client.Site site)
         {
-            web.AddCustomAction(new CustomActionEntity
+            var customActions = site.GetCustomActions().Where(a => a.Title == Consts.CustomActionName).ToList();
+            var length = customActions.Count;
+            for (int i = 0; i < length; i++)
             {
-                Title = "PnP Notifier",
-                ClientSideComponentId = new Guid(Consts.ClientComponentId),
-                ClientSideComponentProperties = "{\"testMessage\":\"Test message\"}",
-                Location = "ClientSideExtension.ApplicationCustomizer",
-                Name = Consts.CustomActionName
-            });
-
-            web.Context.ExecuteQueryRetry();
-        }
-
-        private static void RemoveCustomAction(Web web)
-        {
-            if (web.CustomActionExists(Consts.CustomActionName))
-            {
-                var customActions = web.GetCustomActions().Where(a => a.Name == Consts.CustomActionName).ToList();
-                var length = customActions.Count;
-                for (int i = 0; i < length; i++)
-                {
-                    customActions[i].DeleteObject();
-                }
-
-                web.Context.ExecuteQueryRetry();
+                customActions[i].DeleteObject();
             }
+
+            site.Context.ExecuteQueryRetry();
         }
     }
 }
