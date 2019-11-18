@@ -27,7 +27,7 @@ Azure logic app receives web url from custom SharePoint Site Design. Similar to 
 
 ### 2. Azure AD app registration
 
-1. Create a new Azure AD app registration, enable explicit flow, add `user_impersonation` scope via Expose an API
+1. Create a new Azure AD app registration, enable implicit flow, add `user_impersonation` scope via Expose an API
 2. Add API permissions - `SharePoint` - `Sites.FullControl.All`, `User.ReadWrite.All`
 3. This sample uses Azure AD authentication based on certificates in order to generate an access token for SharePoint. Alternatively, you can use SharePoint-registered app
 4. Create a new certificate to generate and sign access token from webjob (PowerShell):
