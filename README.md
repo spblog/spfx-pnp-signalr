@@ -8,7 +8,7 @@ You should configure Azure Storage account prior running the sample. For local d
 
 #### Blob containers
 
-`pnp-drone` - contains `templates.xml` - PnP Provisioning XML file and folder `assets` with required files. Templated used is ["Contoso Drone Landing"](https://github.com/SharePoint/sp-dev-provisioning-templates/blob/master/tenant/ContosoDroneLanding/README.md)  
+`pnp-drone` - contains `templates.xml` - PnP Provisioning XML file and folder `assets` with required files. Template used in the demo is ["Contoso Drone Landing"](https://github.com/SharePoint/sp-dev-provisioning-templates/blob/master/tenant/ContosoDroneLanding/README.md)  
 The structure:  
 
 ![image](img/storage-1.png)
@@ -85,7 +85,7 @@ Azure WebJob relies on some configuration settings, which should be provided via
 
 ### 5. Add Site Script and Site Design
 
-Under `PS\siteScript sample.ps1` change `url` to point to your Logic app trigger url.
+Under `PS\siteScript sample.ps1` change `url` to point to your Logic app trigger url. Add site design to your tenant using SP Online Management Shell. 
 
 ### 6. Are you still here? Ok, run it!
 
