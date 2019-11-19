@@ -29,6 +29,7 @@ namespace SignalRHub
             Settings.StorageConnection = Configuration[Consts.AzureDashboardKey];
             var tenantId = Configuration["AzureAd:TenantId"];
 
+            // use Azure AD JWT Bearer authentication by default
             services.AddAuthentication(AzureADDefaults.JwtBearerAuthenticationScheme)
                 .AddAzureADBearer(options => { Configuration.Bind("AzureAd", options); });
 
@@ -62,6 +63,8 @@ namespace SignalRHub
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
+        // web sockets don't transport headers, so an access token is attached throught the query string
+        // this method reads token from the query string and adds to the context, so that request becomes authenticated
         private static Task AttachAccessToken(MessageReceivedContext context)
         {
             var accessToken = context.Request.Query["access_token"];
@@ -81,6 +84,7 @@ namespace SignalRHub
             app.UseHttpsRedirection();
 
             app.UseFileServer();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PnPProvisioningHub>("/" + Consts.HubName);

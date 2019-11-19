@@ -46,15 +46,21 @@ namespace ProvisioningJob
                 }
 
                 var authManager = new AuthenticationManager();
+                
+                // use certificate based authentication
                 var context = authManager.GetAzureADAppOnlyAuthenticatedContext(siteModel.WebUrl,
                     _configReader.AzureClientId, _configReader.AzureTenantId, "cert.pfx", _configReader.CertificatePassword);
+                
                 var web = context.Web;
                 context.Load(web);
                 context.ExecuteQueryRetry();
 
+                // main provisioning process
                 await Provision(web, rowKey, log);
 
+                // important: remove custom action added by site design, so that the top notification header is not available
                 RemoveCustomAction(context.Site);
+
                 _tableManager.DeleteEntity(rowKey);
             }
             catch (Exception e)
@@ -66,6 +72,8 @@ namespace ProvisioningJob
 
         private static async Task Provision(Web web, string rowKey, TextWriter log)
         {
+            // pushes notifications to SignalR server
+            // SignalR, in turn, redirects them to all connected clients
             var notifier = new SignalRNotifier(_configReader);
 
             var applyingInformation = new ProvisioningTemplateApplyingInformation

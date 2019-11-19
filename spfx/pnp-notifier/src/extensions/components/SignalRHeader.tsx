@@ -36,12 +36,13 @@ export class SignalRHeader extends React.Component<IProps, IState> {
 
     let connection = new signalR.HubConnectionBuilder()
       .withUrl(signalRHubUrl, {
-        accessTokenFactory: this.getAccessToken.bind(this),
+        accessTokenFactory: this.getAccessToken.bind(this), // authentication
         skipNegotiation: true,
-        transport: HttpTransportType.WebSockets
+        transport: HttpTransportType.WebSockets // explicitly use web sockets in order to avoid CORS issues (web sockets are not subject of CORS)
       })
       .build();
 
+    // when "initial-state" event is triggered from server
     connection.on("initial-state", data => {
       console.log(data);
 
@@ -60,6 +61,7 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       }
     });
 
+    // when "notify" event is triggered from server
     connection.on("notify", data => {
       console.log(data);
       let width = data.progress / data.total * 100;
@@ -76,6 +78,7 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       });
     });
 
+    // when "completed" event is triggered from server
     connection.on("completed", () => {
       console.log("completed");
       this.setState({
@@ -84,10 +87,14 @@ export class SignalRHeader extends React.Component<IProps, IState> {
       });
     });
 
+    // connect
     await connection.start();
+
+    // and ask for the initial state of the provisioning
     await connection.invoke("InitialState", this.props.webUrl);
   }
 
+  // gets Azure AD JWT tokens for authentication against SignalR server
   public async getAccessToken(): Promise<string> {
     let tokenProvider = await this.props.context.aadTokenProviderFactory.getTokenProvider();
     let token = await tokenProvider.getToken(clientId);

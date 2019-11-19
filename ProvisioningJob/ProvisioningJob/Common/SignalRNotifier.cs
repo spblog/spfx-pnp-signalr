@@ -30,6 +30,7 @@ namespace ProvisioningJob.Common
 
         private async Task<HubConnection> CreateAndStartHubConnection()
         {
+            // create the hub and specify authentication
             var hubConnection = new HubConnectionBuilder()
                 .WithUrl(_configReader.SignalrHostUrl + "/" + Consts.HubName, opts =>
                 {
@@ -46,6 +47,7 @@ namespace ProvisioningJob.Common
             return hubConnection;
         }
 
+        // Azure AD cient credentials flow authentication
         public async Task<string> GenerateAccessToken()
         {
             var app = ConfidentialClientApplicationBuilder.Create(_configReader.AzureClientId)

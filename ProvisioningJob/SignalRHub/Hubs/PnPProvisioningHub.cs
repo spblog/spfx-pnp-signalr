@@ -19,16 +19,19 @@ namespace SignalRHub.Hubs
             _logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
         }
 
+        // notifies all connected clients about progress change
         public Task Notify(object data)
         {
             return Clients.All.SendAsync("notify", data);
         }
 
+        // notifies all connected clients that the provisioning is completed
         public Task Completed()
         {
             return Clients.All.SendAsync("completed");
         }
 
+        // notifies specific client about the current state of the provisioning process
         public void InitialState(string webUrl)
         {
             try
