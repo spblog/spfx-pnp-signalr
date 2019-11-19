@@ -1,5 +1,7 @@
 # Show the progress of your PnP Provisioning process with SharePoint Application customizer and SignalR
 
+The [blog post](https://spblog.net/post/2019/11/19/show-the-progress-of-your-pnp-provisioning-process-with-sharepoint-application-customizer-and-signalr).
+
 ## How to configure to run locally
 
 ### 1. Prerequisites
